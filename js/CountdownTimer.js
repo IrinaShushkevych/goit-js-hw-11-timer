@@ -13,10 +13,12 @@ export default class CountdownTimer {
     if (num < 10) return '0' + num
     return String(num)
   }
-  _changeDate = () => {
-    const now = new Date()
-    const time = this._time - now
 
+  _clearInterval() {
+    clearInterval(this._intervalId)
+  }
+
+  _drawTimer(time) {
     this._daysRef.textContent = this._checkLengthText(
       Math.floor(time / (1000 * 60 * 60 * 24)),
     )
@@ -29,5 +31,17 @@ export default class CountdownTimer {
     this._secsRef.textContent = this._checkLengthText(
       Math.floor((time % (1000 * 60)) / 1000),
     )
+  }
+
+  _changeDate = () => {
+    const now = new Date()
+    const time = this._time - now
+
+    if (time <= 0) {
+      this._clearInterval()
+      this._drawTimer(0)
+    } else {
+      this._drawTimer(time)
+    }
   }
 }
